@@ -1,0 +1,162 @@
+// This is your Prisma schema file,
+
+generator client {
+  // output   = "../generated/prisma"
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// RBAC SYSTEM
+model Role {
+  id          String  @id @default(uuid())
+  name        String  @unique
+  description String?
+
+  permissions RolePermission[]
+  personnels  Personnel[]
+
+  createdAt DateTime @default(now())
+}
+
+model Permission {
+  id          String  @id @default(uuid())
+  name        String  @unique
+  description String?
+
+  roles RolePermission[]
+
+  createdAt DateTime @default(now())
+}
+
+model RolePermission {
+  roleId       String
+  permissionId String
+
+  role       Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permission Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+  @@id([roleId, permissionId])
+}
+
+// PERSONNEL & ROLE ASSIGNMENT
+model Personnel {
+  id        String   @id @default(uuid())
+  identity  String   @unique
+  password  String
+  createdAt DateTime @default(now())
+
+  roleId String
+  role   Role   @relation(fields: [roleId], references: [id])
+
+  // Only used if role = MANAGER
+  subsidiaries PersonnelSubsidiary[]
+}
+
+model PersonnelSubsidiary {
+  personnelId  String
+  subsidiaryId String
+
+  personnel  Personnel  @relation(fields: [personnelId], references: [id], onDelete: Cascade)
+  subsidiary Subsidiary @relation(fields: [subsidiaryId], references: [id], onDelete: Cascade)
+
+  @@id([personnelId, subsidiaryId])
+}
+
+// SUBSIDIARY STRUCTURE
+model Subsidiary {
+  id                String @id @default(uuid())
+  name              String @unique
+  description       String
+  industrial_sector String
+
+  createdAt DateTime @default(now())
+
+  categories SubsidiaryCategory[]
+  managers   PersonnelSubsidiary[]
+}
+
+model SubsidiaryCategory {
+  id   String       @id @default(uuid())
+  type CategoryType
+
+  seat_throughput  String?
+  project_inflow   String?
+  inventory        String?
+  monthly_dept     String?
+  net_capital      String?
+  compliance_audit String?
+  asset            Int?
+
+  subsidiaryId String
+  subsidiary   Subsidiary @relation(fields: [subsidiaryId], references: [id], onDelete: Cascade)
+
+  stocks    Stock[]
+  loans     Loan[]
+  exams     Exam[]
+  histories History[]
+
+  createdAt DateTime @default(now())
+
+  @@unique([subsidiaryId, type])
+}
+
+enum CategoryType {
+  business
+  personal
+}
+
+// BUSINESS TABLES (UNDER CATEGORY)
+model Exam {
+  id               String   @id @default(uuid())
+  session_name     String
+  total_candidates Int
+  document_proof   String
+  category         String   @default("JAMB")
+  createdAt        DateTime @default(now())
+
+  subsidiaryCategoryId String
+  subsidiaryCategory   SubsidiaryCategory @relation(fields: [subsidiaryCategoryId], references: [id], onDelete: Cascade)
+}
+
+model Stock {
+  id                    String   @id @default(uuid())
+  asset_identity        String
+  operational_narrative String
+  count                 Int
+  purchase_value        Float
+  category              String
+  unit                  String
+  asset_proof           String
+  createdAt             DateTime @default(now())
+
+  subsidiaryCategoryId String
+  subsidiaryCategory   SubsidiaryCategory @relation(fields: [subsidiaryCategoryId], references: [id], onDelete: Cascade)
+}
+
+model Loan {
+  id                    String   @id @default(uuid())
+  ledger_identity       String
+  operational_narrative String
+  principal             Float
+  category              String
+  term                  String
+  liability_proof       String
+  createdAt             DateTime @default(now())
+
+  subsidiaryCategoryId String
+  subsidiaryCategory   SubsidiaryCategory @relation(fields: [subsidiaryCategoryId], references: [id], onDelete: Cascade)
+}
+
+model History {
+  id        String   @id @default(uuid())
+  title     String
+  desc      String
+  action    String
+  createdAt DateTime @default(now())
+
+  subsidiaryCategoryId String
+  subsidiaryCategory   SubsidiaryCategory @relation(fields: [subsidiaryCategoryId], references: [id], onDelete: Cascade)
+}
