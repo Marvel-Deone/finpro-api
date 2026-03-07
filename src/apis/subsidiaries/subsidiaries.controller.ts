@@ -7,6 +7,7 @@ import {
   Param,
   Body,
   UseGuards,
+  Req,
 } from '@nestjs/common';
 import { SubsidiariesService } from './subsidiaries.service';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
@@ -27,8 +28,8 @@ export class SubsidiariesController {
 
   @Get()
   @RequirePermission('view_subsidiary')
-  findAll() {
-    return this.subsidiariesService.findAll();
+  findAll(@Req() req) {
+    return this.subsidiariesService.findAll(req.user);
   }
 
   @Get(':id')

@@ -4,8 +4,6 @@ import * as bcrypt from 'bcrypt'
 import { PrismaService } from 'src/database/prisma/prisma.service'
 import { LoginDto } from './dto/login.dto'
 
-// import { PrismaService } from '../prisma/prisma.service'
-// import { LoginDto } from './dto/login.dto'
 
 @Injectable()
 export class AuthService {

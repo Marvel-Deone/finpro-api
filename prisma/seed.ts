@@ -9,30 +9,12 @@ import * as bcrypt from 'bcrypt';
 import { PrismaClient } from "@prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 
-console.log("DATABASE_URL:", process.env.DATABASE_URL);
-
 const adapter = new PrismaPg({
   connectionString: process.env.DATABASE_URL!,
 });
 
 export const prisma = new PrismaClient({ adapter });
-// const prisma = new PrismaClient(
-  // {
-  //   datasourceUrl: process.env.DATABASE_URL
-  // }
-  //   {
-  //   datasources: {
-  //     db: {
-  //       url: process.env.DATABASE_URL,
-  //     },
-  //   },
-  // }
-// );
-
-// const prisma = new PrismaClient();
-
 async function main() {
-  console.log('Got to seed: ', process.env.DATABASE_URL)
   // CREATE PERMISSIONS
   const permissionNames = [
     'SUBSIDIARY_CREATE',
@@ -136,8 +118,6 @@ async function main() {
       roleId: superAdminRole.id,
     },
   });
-
-  console.log('Seed completed successfully');
 }
 
 main()
