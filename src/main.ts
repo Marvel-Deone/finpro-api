@@ -16,7 +16,7 @@ async function bootstrap() {
   });
 
   app.enableCors({
-    origin: ['http://localhost:3000', 'https://finpro.vercel.app/'],
+    origin: ['http://localhost:3000', 'https://finpro.vercel.app'],
     credentials: true,
   });
 
