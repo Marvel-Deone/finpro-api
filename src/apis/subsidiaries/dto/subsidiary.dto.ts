@@ -9,12 +9,28 @@ export class CreateSubsidiaryDto {
 
 
 export class UpdateSubsidiaryDto {
-  @IsOptional()
-  @IsString()
-  name?: string;
-  description: string;
-  industrial_sector: string;
+  name?: string
+  description?: string
+  industrial_sector?: string
+
+  categories?: {
+    business?: {
+      seat_throughput?: string
+      project_inflow?: string
+      inventory?: string
+      monthly_dept?: string
+      net_capital?: string
+    }
+  }
 }
+
+// export class UpdateSubsidiaryDto {
+//   @IsOptional()
+//   @IsString()
+//   name?: string;
+//   description: string;
+//   industrial_sector: string;
+// }
 
 
 export class AssignManagersDto {

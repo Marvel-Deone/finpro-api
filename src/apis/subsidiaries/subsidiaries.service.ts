@@ -128,10 +128,10 @@ export class SubsidiariesService {
 
   async findAll(user: any) {
 
-  const whereCondition =
-    user.role === 'Admin' || user.role === 'CEO' || user.role === 'SUPERADMIN'
-      ? {}
-      : {
+    const whereCondition =
+      user.role === 'Admin' || user.role === 'CEO' || user.role === 'SUPERADMIN'
+        ? {}
+        : {
           managers: {
             some: {
               personnelId: user.personnelId,
@@ -139,34 +139,34 @@ export class SubsidiariesService {
           },
         };
 
-  const subsidiaries = await this.prisma.subsidiary.findMany({
-    where: whereCondition,
-    include: {
-      categories: true,
-      managers: {
-        include: {
-          personnel: true,
+    const subsidiaries = await this.prisma.subsidiary.findMany({
+      where: whereCondition,
+      include: {
+        categories: true,
+        managers: {
+          include: {
+            personnel: true,
+          },
         },
       },
-    },
-  });
+    });
 
-  return subsidiaries.map((sub) => {
+    return subsidiaries.map((sub) => {
 
-    const categoryMap = sub.categories.reduce((acc, c) => {
-      acc[c.type.toLowerCase()] = c;
-      return acc;
-    }, {} as any);
+      const categoryMap = sub.categories.reduce((acc, c) => {
+        acc[c.type.toLowerCase()] = c;
+        return acc;
+      }, {} as any);
 
-    return {
-      ...sub,
-      categories: {
-        business: categoryMap.business || null,
-        personal: categoryMap.personal || null,
-      },
-    };
-  });
-}
+      return {
+        ...sub,
+        categories: {
+          business: categoryMap.business || null,
+          personal: categoryMap.personal || null,
+        },
+      };
+    });
+  }
 
   async findOne(id: string) {
     const subsidiary = await this.prisma.subsidiary.findUnique({
@@ -214,13 +214,39 @@ export class SubsidiariesService {
   //   return subsidiary;
   // }
 
-  async update(id: string, dto: UpdateSubsidiaryDto) {
-    await this.findOne(id);
+  // async update(id: string, dto: UpdateSubsidiaryDto) {
+  //   await this.findOne(id);
 
-    return this.prisma.subsidiary.update({
+  //   return this.prisma.subsidiary.update({
+  //     where: { id },
+  //     data: dto,
+  //   });
+  // }
+
+  async update(id: string, dto: UpdateSubsidiaryDto) {
+
+    const subsidiary = await this.prisma.subsidiary.update({
       where: { id },
-      data: dto,
-    });
+      data: {
+        name: dto.name,
+        description: dto.description,
+        industrial_sector: dto.industrial_sector,
+      }
+    })
+
+    if (dto.categories?.business) {
+      await this.prisma.subsidiaryCategory.update({
+        where: {
+          subsidiaryId_type: {
+            subsidiaryId: id,
+            type: "business"
+          }
+        },
+        data: dto.categories.business
+      })
+    }
+
+    return subsidiary
   }
 
   async assignManagers(id: string, dto: AssignManagersDto) {

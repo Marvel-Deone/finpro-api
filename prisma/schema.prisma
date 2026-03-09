@@ -82,6 +82,14 @@ model SubsidiaryCategory {
   id   String       @id @default(uuid())
   type CategoryType
 
+  // seat_throughput  Int?
+  // project_inflow   Float?
+  // inventory        Float?
+  // monthly_dept     Float?
+  // net_capital      Float?
+  // compliance_audit String?
+  // asset            Int?
+
   seat_throughput  String?
   project_inflow   String?
   inventory        String?
