@@ -49,6 +49,7 @@ export class SubsidiaryCategoriesController {
     return this.service.update(id, dto);
   }
 
+  // Delete subsidiary-category
   @Delete(':id')
   @RequirePermission('delete_category')
   remove(@Param('id') id: string) {
