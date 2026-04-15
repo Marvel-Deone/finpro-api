@@ -84,21 +84,21 @@ model SubsidiaryCategory {
   id   String       @id @default(uuid())
   type CategoryType
 
-  seat_throughput  Int?
-  project_inflow   Float?
-  inventory        Float?
-  monthly_dept     Float?
-  net_capital      Float?
-  compliance_audit Int?
-  asset            Int?
-
-  // seat_throughput  String?
-  // project_inflow   String?
-  // inventory        String?
-  // monthly_dept     String?
-  // net_capital      String?
+  // seat_throughput  Int?
+  // project_inflow   Float?
+  // inventory        Float?
+  // monthly_dept     Float?
+  // net_capital      Float?
   // compliance_audit String?
   // asset            Int?
+
+  seat_throughput  String?
+  project_inflow   String?
+  inventory        String?
+  monthly_dept     String?
+  net_capital      String?
+  compliance_audit String?
+  asset            Int?
 
   subsidiaryId String
   subsidiary   Subsidiary @relation(fields: [subsidiaryId], references: [id], onDelete: Cascade)
