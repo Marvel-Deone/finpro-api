@@ -155,6 +155,7 @@ model Stock {
   count                 Int
   purchase_value        Float
   unit                  String
+  category              String
   asset_proof           String
   createdAt             DateTime @default(now())
 
