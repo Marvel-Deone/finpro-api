@@ -6,6 +6,8 @@ import {
     Body,
     UseGuards,
     Query,
+    UseInterceptors,
+    UploadedFile,
 } from '@nestjs/common';
 
 import { LoansService } from './loans.service';
@@ -18,6 +20,7 @@ import {
 } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { CreateLoanDto } from './dto/loan.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @ApiTags('Loans')
 @ApiBearerAuth()
@@ -29,8 +32,15 @@ export class LoansController {
     @Post()
     @ApiOperation({ summary: 'Create a loan record' })
     @ApiResponse({ status: 201, description: 'Loan created successfully' })
-    create(@Body() dto: CreateLoanDto) {
-        return this.loansService.create(dto);
+    @UseInterceptors(FileInterceptor('file', { dest: './uploads', }))
+    create(
+         @UploadedFile() file: Express.Multer.File,
+        @Body() body: any,
+    ) {
+        return this.loansService.create({
+            ...body,
+            liability_proof: file?.filename,
+        });
     }
 
     @Get()

@@ -74,29 +74,31 @@ model Subsidiary {
 
   createdAt DateTime @default(now())
 
+  modules    ModuleTab[]
   categories SubsidiaryCategory[]
   managers   PersonnelSubsidiary[]
+  histories  History[]
 }
 
 model SubsidiaryCategory {
   id   String       @id @default(uuid())
   type CategoryType
 
-  // seat_throughput  Int?
-  // project_inflow   Float?
-  // inventory        Float?
-  // monthly_dept     Float?
-  // net_capital      Float?
+  seat_throughput  Int?
+  project_inflow   Float?
+  inventory        Float?
+  monthly_dept     Float?
+  net_capital      Float?
+  compliance_audit Int?
+  asset            Int?
+
+  // seat_throughput  String?
+  // project_inflow   String?
+  // inventory        String?
+  // monthly_dept     String?
+  // net_capital      String?
   // compliance_audit String?
   // asset            Int?
-
-  seat_throughput  String?
-  project_inflow   String?
-  inventory        String?
-  monthly_dept     String?
-  net_capital      String?
-  compliance_audit String?
-  asset            Int?
 
   subsidiaryId String
   subsidiary   Subsidiary @relation(fields: [subsidiaryId], references: [id], onDelete: Cascade)
@@ -105,8 +107,10 @@ model SubsidiaryCategory {
   loans     Loan[]
   exams     Exam[]
   histories History[]
+  expenseIncomes ExpenseIncome[]
 
   createdAt DateTime @default(now())
+  events    Event[]
 
   @@unique([subsidiaryId, type])
 }
@@ -117,6 +121,21 @@ enum CategoryType {
 }
 
 // BUSINESS TABLES (UNDER CATEGORY)
+model ModuleTab {
+  id           String   @id @default(uuid())
+  module_name  String   @unique
+  module_desc  String
+  content_type String   @default("table")
+  no_input     Int
+  input_fields Json
+  records      Json
+  btn_text     String
+  createdAt    DateTime @default(now())
+
+  subsidiaryId String
+  subsidiary   Subsidiary @relation(fields: [subsidiaryId], references: [id], onDelete: Cascade)
+}
+
 model Exam {
   id               String   @id @default(uuid())
   session_name     String
@@ -135,7 +154,6 @@ model Stock {
   operational_narrative String
   count                 Int
   purchase_value        Float
-  category              String
   unit                  String
   asset_proof           String
   createdAt             DateTime @default(now())
@@ -158,12 +176,41 @@ model Loan {
   subsidiaryCategory   SubsidiaryCategory @relation(fields: [subsidiaryCategoryId], references: [id], onDelete: Cascade)
 }
 
+model Event {
+  id               String   @id @default(uuid())
+  title            String
+  description      String
+  event_datetime   DateTime
+  location_type    String
+  address          String?
+  google_meet_link String?
+
+  subsidiaryCategoryId String
+  subsidiaryCategory   SubsidiaryCategory @relation(fields: [subsidiaryCategoryId], references: [id])
+
+  createdAt DateTime @default(now())
+}
+
 model History {
   id        String   @id @default(uuid())
   title     String
   desc      String
   action    String
   createdAt DateTime @default(now())
+
+  subsidiaryId         String?
+  subsidiary           Subsidiary?         @relation(fields: [subsidiaryId], references: [id], onDelete: Cascade)
+  subsidiaryCategoryId String?
+  subsidiaryCategory   SubsidiaryCategory? @relation(fields: [subsidiaryCategoryId], references: [id], onDelete: Cascade)
+}
+
+model ExpenseIncome {
+  id                    String   @id @default(uuid())
+  record_type       String
+  timeline String
+  narrative             Float
+  principal              String
+  createdAt             DateTime @default(now())
 
   subsidiaryCategoryId String
   subsidiaryCategory   SubsidiaryCategory @relation(fields: [subsidiaryCategoryId], references: [id], onDelete: Cascade)

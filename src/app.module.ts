@@ -12,6 +12,9 @@ import { ExamsModule } from './apis/exams/exams.module';
 import { StocksModule } from './apis/stocks/stocks.module';
 import { LoansModule } from './apis/loans/loans.module';
 import { HistoryModule } from './apis/history/history.module';
+import { ModuleTabsModule } from './apis/module-tabs/module-tabs.module';
+import { EventsModule } from './apis/events/events.module';
+import { ExpenseIncomeModule } from './apis/expense-income/expense-income.module';
 
 @Module({
   imports: [
@@ -29,6 +32,9 @@ import { HistoryModule } from './apis/history/history.module';
     StocksModule,
     LoansModule,
     HistoryModule,
+    ModuleTabsModule,
+    EventsModule,
+    ExpenseIncomeModule,
   ],
   // controllers: [SubsidiariesController],
   // controllers: [AppController],

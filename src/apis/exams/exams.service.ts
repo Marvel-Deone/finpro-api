@@ -19,8 +19,8 @@ export class ExamsService {
         const exam = await this.prisma.exam.create({
             data: {
                 session_name: dto.session_name,
-                total_candidates: dto.total_candidates,
-                document_proof: dto.document_proof,
+                total_candidates: Number(dto.total_candidates),
+                document_proof: dto.document_proof ?? "",
                 category: dto.category ?? 'JAMB',
                 subsidiaryCategoryId: dto.subsidiaryCategoryId,
             },

@@ -8,7 +8,7 @@ export class CreateExamDto {
   total_candidates: number;
 
   @IsString()
-  document_proof: string;
+  document_proof?: string;
 
   @IsString()
   category: string;

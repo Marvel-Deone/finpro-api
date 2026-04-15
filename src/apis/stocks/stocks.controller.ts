@@ -6,6 +6,8 @@ import {
     Body,
     UseGuards,
     Query,
+    UseInterceptors,
+    UploadedFile,
 } from '@nestjs/common';
 import { StocksService } from './stocks.service';
 
@@ -17,6 +19,7 @@ import {
 } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { CreateStockDto } from './dto/stock.dto';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @ApiTags('Stocks')
 @ApiBearerAuth()
@@ -28,8 +31,15 @@ export class StocksController {
     @Post()
     @ApiOperation({ summary: 'Create a stock record' })
     @ApiResponse({ status: 201, description: 'Stock created successfully' })
-    create(@Body() dto: CreateStockDto) {
-        return this.stocksService.create(dto);
+    @UseInterceptors(FileInterceptor('file', { dest: './uploads', }))
+    create(
+        @UploadedFile() file: Express.Multer.File,
+        @Body() body: any,
+    ) {
+        return this.stocksService.create({
+            ...body,
+            asset_proof: file?.fieldname,
+        });
     }
 
     //   @Get()

@@ -16,7 +16,15 @@ export class LoansService {
         }
 
         const loan = await this.prisma.loan.create({
-            data: dto,
+            data: {
+                ledger_identity: dto.ledger_identity,
+                operational_narrative: dto.operational_narrative,
+                principal: Number(dto.principal),
+                category: dto.category ?? '',
+                term: dto.term,
+                liability_proof: dto.liability_proof ?? "",
+                subsidiaryCategoryId: dto.subsidiaryCategoryId,
+            },
         });
 
         // Log history
