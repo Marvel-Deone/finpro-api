@@ -9,14 +9,13 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   app.setGlobalPrefix('_fin6');
-
   app.enableVersioning({
     type: VersioningType.URI,
     defaultVersion: '1',
   });
 
   app.enableCors({
-    origin: ['http://localhost:3000', 'https://finpro.vercel.app'],
+    origin: ['http://localhost:3001', 'https://finpro.vercel.app'],
     credentials: true,
   });
 
@@ -30,6 +29,6 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('_fin6/docs', app, document);
 
-  await app.listen(process.env.PORT ?? 4000);
+  await app.listen(process.env.PORT ?? 5000);
 }
 bootstrap();

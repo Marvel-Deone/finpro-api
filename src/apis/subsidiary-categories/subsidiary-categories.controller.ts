@@ -17,42 +17,47 @@ import { RequirePermission } from '../auth/decorators/require-permission.decorat
 @Controller('subsidiary-categories')
 @UseGuards(JwtAuthGuard, PermissionsGuard)
 export class SubsidiaryCategoriesController {
-  constructor(private readonly service: SubsidiaryCategoriesService) {}
+  constructor(private readonly subsidiaryCategory: SubsidiaryCategoriesService) { }
 
   @Post()
   @RequirePermission('create_category')
   create(@Body() dto: CreateCategoryDto) {
-    return this.service.create(dto);
+    return this.subsidiaryCategory.create(dto);
+  }
+
+  @Get('overview')
+  getOverview() {
+    return this.subsidiaryCategory.getBusinessOverviewTotals();
   }
 
   @Get()
   @RequirePermission('view_category')
   findAll() {
-    return this.service.findAll();
+    return this.subsidiaryCategory.findAll();
   }
 
   @Get(':id')
   @RequirePermission('view_category')
   findOne(@Param('id') id: string) {
-    return this.service.findOne(id);
+    return this.subsidiaryCategory.findOne(id);
   }
 
   @Get('subsidiary/:subsidiaryId')
   @RequirePermission('view_category')
   findBySubsidiary(@Param('subsidiaryId') subsidiaryId: string) {
-    return this.service.findBySubsidiary(subsidiaryId);
+    return this.subsidiaryCategory.findBySubsidiary(subsidiaryId);
   }
 
   @Patch(':id')
   @RequirePermission('update_category')
   update(@Param('id') id: string, @Body() dto: UpdateCategoryDto) {
-    return this.service.update(id, dto);
+    return this.subsidiaryCategory.update(id, dto);
   }
 
   // Delete subsidiary-category
   @Delete(':id')
   @RequirePermission('delete_category')
   remove(@Param('id') id: string) {
-    return this.service.remove(id);
+    return this.subsidiaryCategory.remove(id);
   }
 }

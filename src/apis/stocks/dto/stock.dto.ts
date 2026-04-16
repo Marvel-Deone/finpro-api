@@ -28,7 +28,7 @@ export class CreateStockDto {
 
   @ApiProperty({ example: "https://example.com/receipt.pdf" })
   @IsString()
-  asset_proof: string;
+  asset_proof?: string;
 
   @ApiProperty({ example: "uuid-of-subsidiary-category" })
   @IsUUID()

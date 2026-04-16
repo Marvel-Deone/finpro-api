@@ -16,7 +16,16 @@ export class StocksService {
         }
 
         const stock = await this.prisma.stock.create({
-            data: dto,
+            data: {
+                asset_identity: dto.asset_identity,
+                operational_narrative: dto.operational_narrative,
+                count: Number(dto.count),
+                purchase_value: Number(dto.purchase_value),
+                category: dto.category ?? '',
+                unit: dto.unit ?? '',
+                asset_proof: dto.asset_proof ?? "",
+                subsidiaryCategoryId: dto.subsidiaryCategoryId,
+            },
         });
 
         // log history
