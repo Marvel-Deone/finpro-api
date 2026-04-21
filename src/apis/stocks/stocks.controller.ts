@@ -18,7 +18,6 @@ import {
     ApiBearerAuth,
 } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { CreateStockDto } from './dto/stock.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 
 @ApiTags('Stocks')
@@ -42,11 +41,6 @@ export class StocksController {
         });
     }
 
-    //   @Get()
-    //   @ApiOperation({ summary: 'Get all stock records' })
-    //   findAll() {
-    //     return this.stocksService.findAll();
-    //   }
     @Get()
     @ApiOperation({ summary: 'Get all stock records' })
     findAll(@Query('categoryId') categoryId?: string) {

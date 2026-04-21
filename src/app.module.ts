@@ -36,6 +36,7 @@ import { ExpenseIncomeModule } from './apis/expense-income/expense-income.module
     EventsModule,
     ExpenseIncomeModule,
   ],
+  controllers: [],
   // controllers: [SubsidiariesController],
   // controllers: [AppController],
   // providers: [AppService],
