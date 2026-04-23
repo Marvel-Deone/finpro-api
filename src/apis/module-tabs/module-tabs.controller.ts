@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Query, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { ModuleTabsService } from './module-tabs.service';
 import { RequirePermission } from '../auth/decorators/require-permission.decorator';
@@ -32,5 +32,11 @@ export class ModuleTabsController {
         @Body() record: any
     ) {
         return this.moduleTabsService.addRecord(id, record);
+    }
+
+    @Delete(':id')
+    @RequirePermission('delete_personnel')
+    remove(@Param('id') id: string) {
+        return this.moduleTabsService.remove(id);
     }
 }

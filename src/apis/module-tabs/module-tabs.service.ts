@@ -44,31 +44,31 @@ export class ModuleTabsService {
     }
 
     async addRecord(moduleId: string, record: any) {
-    const module = await this.prisma.moduleTab.findUnique({
-        where: { id: moduleId },
-    });
+        const module = await this.prisma.moduleTab.findUnique({
+            where: { id: moduleId },
+        });
 
-    if (!module) {
-        throw new NotFoundException('Module not found');
+        if (!module) {
+            throw new NotFoundException('Module not found');
+        }
+
+        const input_fields = module.input_fields as any[];
+
+        // Validate against schema
+        this.validateRecord(input_fields, record);
+
+        // Add to existing records
+        const existingRecords = (module.records as any[]) || [];
+
+        const updatedRecords = [...existingRecords, record];
+
+        return this.prisma.moduleTab.update({
+            where: { id: moduleId },
+            data: {
+                records: updatedRecords,
+            },
+        });
     }
-
-    const input_fields = module.input_fields as any[];
-
-    // Validate against schema
-    this.validateRecord(input_fields, record);
-
-    // Add to existing records
-    const existingRecords = (module.records as any[]) || [];
-
-    const updatedRecords = [...existingRecords, record];
-
-    return this.prisma.moduleTab.update({
-        where: { id: moduleId },
-        data: {
-            records: updatedRecords,
-        },
-    });
-}
 
     async findAll(subsidiaryId?: string) {
         const where = subsidiaryId
@@ -122,5 +122,13 @@ export class ModuleTabsService {
                     break;
             }
         }
+    }
+
+    async remove(id: string) {
+        await this.findOne(id);
+
+        return this.prisma.moduleTab.delete({
+            where: { id },
+        });
     }
 }
